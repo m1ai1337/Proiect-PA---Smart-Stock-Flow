@@ -353,7 +353,7 @@ void custom_ui::render()
         if (ImGui::BeginChild("Misc", ImVec2(size.x * 0.5f - 15, size.y))) {
             ImGui::SeparatorText("Misc");
             ImGui::TextUnformatted("Scale");
-            ImGui::SliderFloat("##Scale", &custom_ui::scale, 0.5f, 5.0f, "ratio = %.2f");
+            ImGui::SliderFloat("##Scale", &custom_ui::scale, 0.5f, 3.5f, "ratio = %.2f");
             
         } ImGui::EndChild();
 

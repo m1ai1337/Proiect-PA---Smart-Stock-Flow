@@ -54,8 +54,8 @@ int main(int, char**)
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-    io.Fonts->AddFontFromFileTTF("C:/Windows/Fonts/seguibl.ttf");
-    io.FontDefault = io.Fonts->Fonts.back();
+    ImFont* font = io.Fonts->AddFontFromFileTTF("C:/Windows/Fonts/seguibl.ttf");
+    io.FontDefault = font;
     // Setup Dear ImGui style
    //    ImGui::StyleColorsDark();
     //ImGui::StyleColorsLight();

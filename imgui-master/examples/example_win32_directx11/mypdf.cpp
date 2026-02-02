@@ -53,7 +53,7 @@ void mypdf::create_pdf(int id, std::string descriere, float val, bool tip)
     std::string name = "factura_" + std::to_string(id) + ".pdf";
     std::string descriere_text = "Descriere: " + descriere;
     std::string val_text = "Valoare: " + std::to_string(val) + " RON";
-    std::string tip_text = std::string("Tip: ") + (tip ? "Venituri" : "Cheltuieli");
+    std::string tip_text = std::string("Tip: ") + (tip ? "Venit" : "Cheltuiala");
 
     pdf = HPDF_New(error_handler, NULL);
     if (!pdf) {
