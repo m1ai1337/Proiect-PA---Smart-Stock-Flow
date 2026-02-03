@@ -3,6 +3,7 @@
 #include "Produs.hpp"
 #include "Tranzactie.hpp"
 #include "mypdf.hpp"
+#include "data.hpp"
 
 namespace custom_ui {
     inline float scale = 0.90f;

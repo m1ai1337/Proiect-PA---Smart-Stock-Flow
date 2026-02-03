@@ -9,6 +9,13 @@ namespace TR {
         this->type = type;
     }
 
+    Tranzactie::Tranzactie()
+    {
+        this->descriere = "";
+        this->val = 0.0f;
+        this->type = false;
+    }
+
     Tranzactie::~Tranzactie()
     {
 
@@ -44,8 +51,16 @@ namespace TR {
     {
         return this->descriere;
     }
-    
 
+    void to_json(json& j, const Tranzactie& p)
+    {
+        j = json{ {"descriere", p.descriere}, {"type", p.val}, {"val", p.type} };
+    }
 
-
+    void from_json(const json& j, Tranzactie& p)
+    {
+        j.at("descriere").get_to(p.descriere);
+        j.at("type").get_to(p.val);
+        j.at("val").get_to(p.type);
+    }
 }

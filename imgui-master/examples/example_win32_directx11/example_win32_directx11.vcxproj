@@ -157,7 +157,9 @@
     <ClInclude Include="..\..\backends\imgui_impl_dx11.h" />
     <ClInclude Include="..\..\backends\imgui_impl_win32.h" />
     <ClInclude Include="cfg.hpp" />
+    <ClInclude Include="data.hpp" />
     <ClInclude Include="includes.h" />
+    <ClInclude Include="json.hpp" />
     <ClInclude Include="mypdf.hpp" />
     <ClInclude Include="Produs.hpp" />
     <ClInclude Include="Tranzactie.hpp" />
@@ -171,6 +173,7 @@
     <ClCompile Include="..\..\imgui_widgets.cpp" />
     <ClCompile Include="..\..\backends\imgui_impl_dx11.cpp" />
     <ClCompile Include="..\..\backends\imgui_impl_win32.cpp" />
+    <ClCompile Include="data.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mypdf.cpp" />
     <ClCompile Include="Produs.cpp" />

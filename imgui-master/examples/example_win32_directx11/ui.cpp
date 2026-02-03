@@ -354,6 +354,14 @@ void custom_ui::render()
             ImGui::SeparatorText("Misc");
             ImGui::TextUnformatted("Scale");
             ImGui::SliderFloat("##Scale", &custom_ui::scale, 0.5f, 3.5f, "ratio = %.2f");
+            if (ImGui::Button("Load"))
+            {
+                data::load();
+            }
+            if (ImGui::Button("Save"))
+            {
+                data::save();
+            }
             
         } ImGui::EndChild();
 
