@@ -36,22 +36,78 @@ void custom_ui::render()
                 ImGui::TableHeadersRow();
                 ImGui::TableNextRow();
 
-                ImGui::TableSetColumnIndex(0); ImGui::Text("%.2f RON", custom_ui::curren_balance);
-                ImGui::TableSetColumnIndex(1); ImGui::Text("%.2f RON", custom_ui::venituri);
-                ImGui::TableSetColumnIndex(2); ImGui::Text("%.2f RON", custom_ui::cheltuieli);
+                ImGui::TableSetColumnIndex(0); ImGui::Text("%.0f RON", custom_ui::curren_balance);
+                ImGui::TableSetColumnIndex(1); ImGui::Text("%.0f RON", custom_ui::venituri);
+                ImGui::TableSetColumnIndex(2); ImGui::Text("%.0f RON", custom_ui::cheltuieli);
                 ImGui::EndTable();
             }
             ImGui::SeparatorText("Alerte Stock");
-            if (ImGui::BeginTable("##Alerte Stock", 7, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg))
+            if (ImGui::BeginTable("##Alerte Stock", 8, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_SizingStretchProp))
             {
                 ImGui::TableSetupColumn("Nr.");
                 ImGui::TableSetupColumn("Nume");
                 ImGui::TableSetupColumn("Pret");
                 ImGui::TableSetupColumn("Stock");
                 ImGui::TableSetupColumn("Vanzari medii");
-                ImGui::TableSetupColumn("Timp de livare");
+                ImGui::TableSetupColumn("Timp de livrare");
+                ImGui::TableSetupColumn("Informatii");
                 ImGui::TableSetupColumn("Buy");
                 ImGui::TableHeadersRow();
+
+                int cnt = 0;
+                for (produs::adauga_produs& p : lista_produse)
+                {
+                    if (p.alert())
+                    {
+                        cnt++;
+                        ImGui::TableNextRow();
+                        ImGui::TableSetColumnIndex(0); ImGui::Text("%d", cnt);
+                        ImGui::TableSetColumnIndex(1); ImGui::Text("%s", p.get_nume().c_str());
+                        ImGui::TableSetColumnIndex(2); ImGui::Text("%.0f RON", p.get_price());
+                        ImGui::TableSetColumnIndex(3); ImGui::Text("%d", p.get_stock());
+                        ImGui::TableSetColumnIndex(4); ImGui::Text("%d/sapt.", p.get_medie());
+                        ImGui::TableSetColumnIndex(5); ImGui::Text("%d sapt.", p.get_prag_min());
+                        ImGui::TableSetColumnIndex(6); ImGui::Text("Urmeaza sa rama fara stock in %.0f de sapt.!", (float)p.get_stock() / p.get_medie());
+                        ImGui::TableSetColumnIndex(7);
+
+                        ImGui::PushID(cnt);
+                        if (ImGui::Button("Buy ##stock"))
+                        {
+                            ImGui::OpenPopup("buy stock");
+                            cfg::cantitate = abs(p.get_medie() - p.get_stock()) * (int)p.get_stock() / p.get_medie();
+                            cfg::old_stock = p.get_stock();
+                        }
+                        if (ImGui::BeginPopup("buy stock"))
+                        {
+
+                            ImGui::TextUnformatted("Nr de bucati");
+                            ImGui::InputInt("##Stock", &cfg::cantitate);
+                            ImGui::Spacing();
+                            if (ImGui::Button("Cumpara"))
+                            {
+                                if (custom_ui::curren_balance - p.get_price()*cfg::cantitate >= 0)
+                                {
+                                    p.set_stock(cfg::old_stock + cfg::cantitate);
+                                    custom_ui::curren_balance -= p.get_price() * cfg::cantitate;
+                                    ImGui::CloseCurrentPopup();
+                                }
+                                else
+                                {
+                                    ImGui::OpenPopup("Fonduri insuficiente");
+                                }
+                                
+                            }
+                            if (ImGui::BeginPopup("Fonduri insuficiente"))
+                            {
+                                ImGui::Text("Mai ai nevoie de %.0f RON", abs(custom_ui::curren_balance - p.get_price() * cfg::cantitate));
+                                ImGui::EndPopup();
+                            }
+
+                            ImGui::EndPopup();
+                        }
+                        ImGui::PopID();
+                    }
+                }
 
                 ImGui::EndTable();
             }
@@ -302,6 +358,7 @@ void custom_ui::render()
                             t.set_val(cfg::e.val);
                             t.set_type(e_item_current);
                             ImGui::CloseCurrentPopup();
+                            
                         }
                         ImGui::SameLine();
                         if (ImGui::Button("Delete"))
@@ -321,7 +378,7 @@ void custom_ui::render()
 
                     ImGui::PopID();
 
-
+                    
                 }
                 if (index_del != -1)
                 {
@@ -330,6 +387,8 @@ void custom_ui::render()
                     tranz.erase(it);
                     index_del = -1;
                 }
+
+
 
                 ImGui::EndTable();
             }
@@ -362,8 +421,24 @@ void custom_ui::render()
             ImGui::Spacing();
             if (ImGui::Button("         Save        "))
             {
-                data::save();
+                ImGui::OpenPopup("Confirm Save");
+                
             }
+            if (ImGui::BeginPopup("Confirm Save"))
+            {
+                if (ImGui::Button("         Yes        "))
+                {
+                    data::save();
+                    ImGui::CloseCurrentPopup();
+                }
+                ImGui::SameLine(0, 15.0f);
+                if (ImGui::Button("         No         "))
+                {
+                    ImGui::CloseCurrentPopup();
+                }
+                ImGui::EndPopup();
+            }
+           
             
         } ImGui::EndChild();
 

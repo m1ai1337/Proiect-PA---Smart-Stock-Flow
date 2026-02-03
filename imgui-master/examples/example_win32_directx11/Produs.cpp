@@ -74,6 +74,14 @@ namespace produs {
         this->medie_vanz = medie_vanz;
     }
 
+    //alert
+    bool adauga_produs::alert()
+    {
+        int val_s = medie_vanz * timp;
+        return stock <= val_s;
+    }
+
+    //json
     void to_json(json& j, const adauga_produs& p)
     {
         j = json{ {"nume", p.nume}, {"price", p.price}, {"stock", p.stock},  {"medie", p.medie_vanz},  {"timp", p.timp}};

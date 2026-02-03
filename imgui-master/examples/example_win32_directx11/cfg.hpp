@@ -10,6 +10,8 @@ namespace cfg
     inline int stock;
     inline int prag_min;
     inline int vanz_med;
+    inline int cantitate;
+    inline int old_stock;
 
    struct prod
    {
