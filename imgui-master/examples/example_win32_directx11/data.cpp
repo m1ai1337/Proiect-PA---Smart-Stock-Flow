@@ -5,7 +5,7 @@ namespace data {
 
     void save()
     {
-        fs::path base = fs::path(std::getenv("USERPROFILE")) / "OneDrive" / "Documents" / "smart stock flow";
+        fs::path base = fs::path(std::getenv("USERPROFILE"))  / "Documents" / "smart stock flow";
         if (!fs::exists(base)) {
             fs::create_directory(base);
             std::cout << "Directory created: " << base
@@ -29,7 +29,9 @@ namespace data {
 
         for (produs::adauga_produs& p : custom_ui::lista_produse)
         {
-        
+            json jt;
+            to_json(jt, p);
+            j["produse"].push_back(jt);
         }
 
         std::ofstream out(file);
@@ -38,7 +40,7 @@ namespace data {
     }
     void load()
     {
-        fs::path base = fs::path(std::getenv("USERPROFILE")) / "OneDrive" / "Documents" / "smart stock flow";
+        fs::path base = fs::path(std::getenv("USERPROFILE")) / "Documents" / "smart stock flow";
         if (!fs::exists(base)) {
             fs::create_directory(base);
             std::cout << "Directory created: " << base
@@ -72,6 +74,17 @@ namespace data {
                 TR::Tranzactie t = TR::Tranzactie();
                 from_json(jt, t);
                 custom_ui::tranz.push_back(t);
+            }
+        }
+
+        custom_ui::lista_produse.clear();
+        if (j.contains("produse") && j["produse"].is_array())
+        {
+            for (const auto& jt : j["produse"])
+            {
+                produs::adauga_produs p = produs::adauga_produs();
+                from_json(jt, p);
+                custom_ui::lista_produse.push_back(p);
             }
         }
 

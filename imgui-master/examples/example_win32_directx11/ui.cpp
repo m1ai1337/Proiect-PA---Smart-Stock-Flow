@@ -81,7 +81,7 @@ void custom_ui::render()
             {
                 if (cfg::nume[0] != '\0')
                 {
-                    lista_produse.push_back(produs::adauga_produs(cfg::pret, std::string(cfg::nume), cfg::stock, cfg::prag_min, cfg::vanz_med));
+                    lista_produse.push_back(produs::adauga_produs(cfg::pret, std::string(cfg::nume), cfg::stock, cfg::vanz_med, cfg::prag_min));
                     std::strncpy(cfg::nume, "", sizeof(cfg::nume) - 1);
                     cfg::nume[sizeof(cfg::nume) - 1] = '\0';
                     cfg::stock = 0;
@@ -136,7 +136,7 @@ void custom_ui::render()
                     ImGui::TableSetColumnIndex(5); ImGui::Text("%d sapt.", prod.get_prag_min());
                     ImGui::TableSetColumnIndex(6);
                     ImGui::PushID(cnt);
-                    if (ImGui::Button("Edit"))
+                    if (ImGui::Button("Edit ##stock"))
                     {
                         ImGui::OpenPopup("Edit Window");
                         std::strncpy(cfg::edit.nume, prod.get_nume().c_str(), sizeof(cfg::edit.nume) - 1);
@@ -275,7 +275,7 @@ void custom_ui::render()
                     ImGui::TableSetColumnIndex(3); ImGui::Text("%s", (t.get_type() == false ? "Cheltuiala" : "Venit"));
                     ImGui::TableSetColumnIndex(4);  
                     ImGui::PushID(cnt);
-                    if (ImGui::Button("Edit"))
+                    if (ImGui::Button("Edit ##edit tranz"))
                     {
                         ImGui::OpenPopup("Edit Window");
                         std::strncpy(cfg::e.descriere, t.get_descriere().c_str(), sizeof(cfg::e.descriere) - 1);
@@ -354,11 +354,13 @@ void custom_ui::render()
             ImGui::SeparatorText("Misc");
             ImGui::TextUnformatted("Scale");
             ImGui::SliderFloat("##Scale", &custom_ui::scale, 0.5f, 3.5f, "ratio = %.2f");
-            if (ImGui::Button("Load"))
+            ImGui::Spacing();
+            if (ImGui::Button("         Load        "))
             {
                 data::load();
             }
-            if (ImGui::Button("Save"))
+            ImGui::Spacing();
+            if (ImGui::Button("         Save        "))
             {
                 data::save();
             }
