@@ -1,5 +1,4 @@
-#include "ui.hpp"
-
+﻿#include "ui.hpp"
 
 void custom_ui::render()
 {
@@ -28,7 +27,7 @@ void custom_ui::render()
     if (ImGui::BeginTabItem("Dashboard")) {
         if (ImGui::BeginChild("Overview")) {
             ImGui::SeparatorText("Overview");
-            if (ImGui::BeginTable("##Gestionare Stocuri", 3, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg))
+            if (ImGui::BeginTable("##overview tabel", 3, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg))
             {
                 ImGui::TableSetupColumn("Fonduri");
                 ImGui::TableSetupColumn("Venituri");
@@ -41,6 +40,21 @@ void custom_ui::render()
                 ImGui::TableSetColumnIndex(2); ImGui::Text("%.0f RON", custom_ui::cheltuieli);
                 ImGui::EndTable();
             }
+            cheltuieli = 0;
+            venituri = 0;
+            for (TR::Tranzactie t : tranz)
+            {
+                if (t.get_type() == false)
+                {
+                    cheltuieli += t.get_val();
+                }
+                else
+                {
+                    venituri+= t.get_val();
+
+                }
+            }
+
             ImGui::SeparatorText("Alerte Stock");
             if (ImGui::BeginTable("##Alerte Stock", 8, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_SizingStretchProp))
             {
@@ -138,6 +152,7 @@ void custom_ui::render()
                 if (cfg::nume[0] != '\0')
                 {
                     lista_produse.push_back(produs::adauga_produs(cfg::pret, std::string(cfg::nume), cfg::stock, cfg::vanz_med, cfg::prag_min));
+                    istoric.push_back("Produsul cu numele " + std::string(cfg::nume) + "a fost adauga cu succes!");
                     std::strncpy(cfg::nume, "", sizeof(cfg::nume) - 1);
                     cfg::nume[sizeof(cfg::nume) - 1] = '\0';
                     cfg::stock = 0;
@@ -224,12 +239,14 @@ void custom_ui::render()
                             prod.set_price(cfg::edit.pret);
                             prod.set_medie(cfg::edit.vanz_med);
                             prod.set_string(std::string(cfg::edit.nume));
+                            istoric.push_back("Produsul cu numele " + prod.get_nume() + "a fost editat cu succes!");
                             ImGui::CloseCurrentPopup();
                         }
                         ImGui::SameLine();
                         if (ImGui::Button("Delete"))
                         {
                             index_del = cnt - 1;
+                            istoric.push_back("Produsul cu numele " + prod.get_nume() + "a fost sters cu succes!");
                             ImGui::CloseCurrentPopup();
                         }
                        
@@ -377,8 +394,6 @@ void custom_ui::render()
                     }
 
                     ImGui::PopID();
-
-                    
                 }
                 if (index_del != -1)
                 {
@@ -400,9 +415,17 @@ void custom_ui::render()
 
     if (ImGui::BeginTabItem("Misc")) {
 
-        if (ImGui::BeginChild("Istoric", ImVec2(size.x * 0.5f - 15, size.y))) {
+        if (ImGui::BeginChild("Istoric", ImVec2(size.x * 0.5f - 15, size.y *0.9f))) {
             ImGui::SeparatorText("Istoric");
-           
+            ImGui::PushStyleColor(ImGuiCol_ChildBg, ImGui::GetStyleColorVec4(ImGuiCol_FrameBg));
+            if (ImGui::BeginChild("##istoric child"))
+            {
+                for (std::string i : istoric)
+                {
+                    ImGui::Text(i.c_str());
+                }
+
+            }ImGui::PopStyleColor(); ImGui::EndChild();
            
         }  ImGui::EndChild();
        
